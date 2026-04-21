@@ -62,7 +62,7 @@
  *
  * This package depends on PEAR to raise errors.
  */
-require_once 'PEAR.php';
+// require_once 'PEAR.php';
 
 
 /**
@@ -88,7 +88,7 @@ require_once 'PEAR.php';
  * @version    Release: @package_version@
  * @link       http://pear.php.net/package/Mail_mime
  */
-class Mail_mimeDecode extends PEAR
+class Mail_mimeDecode
 {
     /**
      * The raw email to decode
@@ -96,7 +96,7 @@ class Mail_mimeDecode extends PEAR
      * @var    string
      * @access private
      */
-    var $_input;
+    public $_input;
 
     /**
      * The header part of the input
@@ -104,7 +104,7 @@ class Mail_mimeDecode extends PEAR
      * @var    string
      * @access private
      */
-    var $_header;
+    public $_header;
 
     /**
      * The body part of the input
@@ -112,7 +112,7 @@ class Mail_mimeDecode extends PEAR
      * @var    string
      * @access private
      */
-    var $_body;
+    public $_body;
 
     /**
      * If an error occurs, this is used to store the message
@@ -120,7 +120,7 @@ class Mail_mimeDecode extends PEAR
      * @var    string
      * @access private
      */
-    var $_error;
+    public $_error;
 
     /**
      * Flag to determine whether to include bodies in the
@@ -129,7 +129,7 @@ class Mail_mimeDecode extends PEAR
      * @var    boolean
      * @access private
      */
-    var $_include_bodies;
+    public $_include_bodies;
 
     /**
      * Flag to determine whether to decode bodies
@@ -137,7 +137,7 @@ class Mail_mimeDecode extends PEAR
      * @var    boolean
      * @access private
      */
-    var $_decode_bodies;
+    public $_decode_bodies;
 
     /**
      * Flag to determine whether to decode headers
@@ -145,7 +145,7 @@ class Mail_mimeDecode extends PEAR
      * @var    mixed 
      * @access private
      */
-    var $_decode_headers;
+    public $_decode_headers;
   
 
     /**
@@ -155,7 +155,7 @@ class Mail_mimeDecode extends PEAR
      * @var    boolean
      * @access private
      */
-    var $_rfc822_bodies;
+    public $_rfc822_bodies;
 
     /**
      * Constructor.
@@ -217,7 +217,7 @@ class Mail_mimeDecode extends PEAR
 
         // Called statically but no input
         } elseif ($isStatic) {
-            return PEAR::raiseError('Called statically and no input given');
+            return $this->raiseError('Called statically and no input given');
 
         // Called via an object
         } else {
@@ -231,7 +231,7 @@ class Mail_mimeDecode extends PEAR
 	                             $params['rfc_822bodies']  : false;
                                  
             if (is_string($this->_decode_headers) && !function_exists('iconv')) {
-                 PEAR::raiseError('header decode conversion requested, however iconv is missing');
+                 $this->raiseError('header decode conversion requested, however iconv is missing');
             }
                                  
             $structure = $this->_decode($this->_header, $this->_body);
@@ -833,12 +833,24 @@ class Mail_mimeDecode extends PEAR
         $input = preg_replace("/=\r?\n/", '', $input);
 
         // Replace encoded characters
-		 
-        $cb = create_function('$matches',  ' return chr(hexdec($matches[0]));');
-         
-        $input = preg_replace_callback( '/=([a-f0-9]{2})/i', $cb, $input);
+        $input = preg_replace_callback( '/=([a-f0-9]{2})/i', function($matches) {
+            return chr(hexdec($matches[0]));
+        }, $input);
 
         return $input;
+    }
+
+    /**
+     * Custom raiseError method to replace PEAR::raiseError
+     *
+     * @param string $message Error message
+     * @return object Error object
+     */
+    function raiseError($message)
+    {
+        $error = new stdClass();
+        $error->message = $message;
+        return $error;
     }
 
     /**

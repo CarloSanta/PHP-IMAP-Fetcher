@@ -1,10 +1,10 @@
-Updated version for PHP7 compatibility (Using MySQLi).
+Updated version for PHP 8.x compatibility (Using MySQLi).
 
 # PHP IMAP Fetcher
-PHP IMAP Fetcher is an open source PHP script that can fetch or pipe emails from a POP box, save the message to MySQL (both text-plain and text-html), and save attachments/images locally.
+PHP IMAP Fetcher is an open source PHP script that can fetch or pipe emails from a POP/IMAP box, save the message to MySQL (both text-plain and text-html), and save attachments/images locally.
 
 # Compatibility
-The script has been tested on emails sent from Gmail, Outlook, Yahoo, Apple Mail, Mozilla Thunderbird, and others.
+The script is compatible with PHP 8.x and has been tested on emails sent from Gmail, Outlook, Yahoo, Apple Mail, Mozilla Thunderbird, and others. The legacy PEAR dependency has been removed from `mimeDecode.php`.
 
 # Installing
 Navigate to the folder on your server where you want to run the script.

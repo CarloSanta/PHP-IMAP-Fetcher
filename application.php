@@ -57,8 +57,6 @@ if ($grab_type == "fetch") {
 
 function generateId($n) {
 
-  mt_srand((double)microtime()*1000000);
-
   $id = "";
   while(strlen($id)<$n){
     switch(mt_rand(1,3)){

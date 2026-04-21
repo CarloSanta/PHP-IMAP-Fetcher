@@ -2,9 +2,21 @@
 
 class EmailObject {
   
-  var $saved_files        = array();
-  var $filename_aliases   = array();
-  var $inline_image_types = array("png","gif","jpg","jpeg","bmp");
+  public $saved_files        = array();
+  public $filename_aliases   = array();
+  public $inline_image_types = array("png","gif","jpg","jpeg","bmp");
+
+  protected $mysql;
+  protected $uniqid;
+  protected $source;
+  protected $file_store;
+  protected $decoded;
+  protected $from;
+  protected $name;
+  protected $email;
+  protected $subject;
+  protected $bodyText;
+  protected $bodyHtml;
   
   function __construct($mysql,$uniqid,$source,$file_store) {
     
@@ -186,7 +198,7 @@ class EmailObject {
     // Get the AI ID from MySQL
     $result = mysqli_query ($mysql, "SELECT id FROM emails WHERE uniqid='".$uniqid."'");
     if (!$result) {
-        printf("Error: %s\n", mysqli_error($con));
+        printf("Error: %s\n", mysqli_error($mysql));
         exit();
     }    
     $row = mysqli_fetch_array($result);
@@ -196,7 +208,7 @@ class EmailObject {
     if (sizeof($this->saved_files) > 0) {
       foreach($this->saved_files as $filename){
         $filename = mysqli_real_escape_string($mysql, mb_convert_encoding($filename,'UTF-8','UTF-8'));
-        mysqli_query("INSERT INTO files (email_id,filename) VALUES ('".$email_id."','".$filename."')");
+        mysqli_query($mysql, "INSERT INTO files (email_id,filename) VALUES ('".$email_id."','".$filename."')");
       }
     }
   }
